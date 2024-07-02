@@ -12,6 +12,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DBcontext\DBcontext.csproj" />
     <ProjectReference Include="..\CodeLearn.Core\CodeLearn.Core.csproj" />
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@ using CodeLearn.Authorization.Roles;
 using CodeLearn.Authorization.Users;
 using CodeLearn.Roles.Custom;
 using CodeLearn.Roles.Dto;
+using LearnAPI.Repos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,13 +25,17 @@ namespace CodeLearn.Roles
         private readonly RoleManager _roleManager;
         private readonly UserManager _userManager;
         private readonly PermissionManager2 _permissionManager;
+        private readonly LearndataContext _context;
+      
 
-        public RoleAppService(IRepository<Role> repository, RoleManager roleManager, UserManager userManager , PermissionManager2 permissionManager)
+        public RoleAppService(IRepository<Role> repository, RoleManager roleManager, UserManager userManager , PermissionManager2 permissionManager, LearndataContext context)
             : base(repository)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _permissionManager = permissionManager;
+            _context = context;
+
         }
 
         public override async Task<RoleDto> CreateAsync(CreateRoleDto input)
@@ -105,6 +110,7 @@ namespace CodeLearn.Roles
             var permissions = PermissionManager.GetAllPermissions();
             var userId = _userManager.Users.FirstOrDefault();
             var a = _permissionManager.GetAllPermissions();
+            var ax = _context.TblMenus.ToList();
 
             return Task.FromResult(new ListResultDto<PermissionDto>(
                 ObjectMapper.Map<List<PermissionDto>>(permissions).OrderBy(p => p.DisplayName).ToList()

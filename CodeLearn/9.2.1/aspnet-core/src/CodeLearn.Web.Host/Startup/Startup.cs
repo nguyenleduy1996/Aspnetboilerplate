@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using DBcontext.DBContext;
 using System.Configuration;
 using Castle.Windsor.Installer;
+using LearnAPI.Repos;
 
 namespace CodeLearn.Web.Host.Startup
 {
@@ -85,7 +86,7 @@ namespace CodeLearn.Web.Host.Startup
                 )
             );
 
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<LearndataContext>(options =>
                options.UseSqlServer("Server=test_db.mssql.somee.com;Database=test_db;User Id=nguyenleduy1996_SQLLogin_1;Password=3o8ryugarr;TrustServerCertificate=True;Persist Security Info=False;"));
             ;
         }
