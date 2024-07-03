@@ -17,11 +17,12 @@ using CodeLearn.MultiTenancy;
 using Abp.Domain.Repositories;
 using CodeLearn.Authorization.Roles;
 using CodeLearn.Roles.Custom;
+using LearnAPI.Repos;
 
 namespace CodeLearn.Controllers
 {
 
-
+    [AbpAuthorize(PermissionNames.Pages_Roles)]
     [Route("api/[controller]/[action]")]
     public class TokenAuth2Controller : CodeLearnControllerBase
     {
@@ -33,22 +34,13 @@ namespace CodeLearn.Controllers
         private readonly RoleManager _roleManager;
         private readonly UserManager _userManager;
         private readonly PermissionManager2 _permissionManager;
-
-   /*     public RoleAppService(IRepository<Role> repository, RoleManager roleManager, UserManager userManager, PermissionManager2 permissionManager)
-            : base(repository)
-        {
-            _roleManager = roleManager;
-            _userManager = userManager;
-            _permissionManager = permissionManager;
-        }*/
-
-
+        private readonly LearndataContext _context;
 
         public TokenAuth2Controller(
             LogInManager logInManager,
             ITenantCache tenantCache,
             AbpLoginResultTypeHelper abpLoginResultTypeHelper,
-            TokenAuthConfiguration configuration, RoleManager roleManager, UserManager userManager, PermissionManager2 permissionManager
+            TokenAuthConfiguration configuration, RoleManager roleManager, UserManager userManager, PermissionManager2 permissionManager, LearndataContext context
             )
         {
             _logInManager = logInManager;
@@ -57,13 +49,14 @@ namespace CodeLearn.Controllers
             _configuration = configuration; _roleManager = roleManager;
             _userManager = userManager;
             _permissionManager = permissionManager;
+            _context = context;
         }
         [HttpGet]
         public IActionResult  Gettest()
         {
             var user = _userManager.Users.FirstOrDefault();
-            var user2 = _permissionManager.GetAllPermissions();
-            return Ok(user);
+            var result = _context.TblMenus.ToList();
+            return Ok(result);
         }
     }
 }
