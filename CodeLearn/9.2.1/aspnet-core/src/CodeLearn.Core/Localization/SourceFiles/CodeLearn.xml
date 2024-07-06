@@ -118,5 +118,6 @@
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
     <text name="UsersActivation">Users activation</text>
     <text name="Permission">Permission</text>
+	<text name="Test">Test</text>
   </texts>
 </localizationDictionary>

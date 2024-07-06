@@ -56,7 +56,8 @@ namespace CodeLearn.Controllers
         {
             var user = _userManager.Users.FirstOrDefault();
             var result = _context.TblMenus.ToList();
-            return Ok(result);
+            var  product = _context.Product.ToList();
+            return Ok(product);
         }
     }
 }

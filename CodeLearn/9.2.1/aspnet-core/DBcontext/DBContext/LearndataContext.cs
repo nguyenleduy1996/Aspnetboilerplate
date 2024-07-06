@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using LearnAPI.Repos.Models;
 using Microsoft.EntityFrameworkCore;
+using SignalRDemo3ytEFC.Models;
 
 namespace LearnAPI.Repos;
 
@@ -40,6 +41,8 @@ public partial class LearndataContext : DbContext
 
     public virtual DbSet<TblUserPermission> TblUserPermissions { get; set; }
     public virtual DbSet<TblRolePermissionv2> TblRolePermissionv2s { get; set; }
+
+    public virtual DbSet<Product> Product { get; set; } = null!;
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

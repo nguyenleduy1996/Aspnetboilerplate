@@ -21,6 +21,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using Castle.Windsor.Installer;
 using LearnAPI.Repos;
+using SignalRDemo3ytEFC.Hubs;
+using SignalRDemo3ytEFC.SubscribeTableDependencies;
+using SignalRDemo3ytEFC.MiddlewareExtensions;
+using Castle.Core.Configuration;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace CodeLearn.Web.Host.Startup
 {
@@ -32,12 +37,12 @@ namespace CodeLearn.Web.Host.Startup
 
         private readonly IConfigurationRoot _appConfiguration;
         private readonly IWebHostEnvironment _hostingEnvironment;
-
-        public Startup(IWebHostEnvironment env)
+        private readonly IConfiguration _configuration;
+        public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
             _hostingEnvironment = env;
             _appConfiguration = env.GetAppConfiguration();
-         
+            _configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -86,8 +91,14 @@ namespace CodeLearn.Web.Host.Startup
             );
 
             services.AddDbContext<LearndataContext>(options =>
-               options.UseSqlServer("Server=test_db.mssql.somee.com;Database=test_db;User Id=nguyenleduy1996_SQLLogin_1;Password=3o8ryugarr;TrustServerCertificate=True;Persist Security Info=False;"));
-            ;
+               options.UseSqlServer(_configuration.GetConnectionString("Default")));
+
+            services.AddSingleton<DashboardHub>();
+            services.AddSingleton<SubscribeProductTableDependency>();
+
+            //services.AddDbContext<LearndataContext>(options =>
+            //   options.UseSqlServer("Server=test_db.mssql.somee.com;Database=test_db;User Id=nguyenleduy1996_SQLLogin_1;Password=3o8ryugarr;TrustServerCertificate=True;Persist Security Info=False;"));
+            //;
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -107,11 +118,19 @@ namespace CodeLearn.Web.Host.Startup
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<DashboardHub>("/signalr-dashboardHub");
                 endpoints.MapHub<AbpCommonHub>("/signalr");
+                endpoints.MapHub<MyChatHub>("/signalr-myChatHub");
+
+           
+
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
+                app.UseSqlTableDependency<SubscribeProductTableDependency>(_configuration.GetConnectionString("Default"));
             });
 
+
+            
             // Enable middleware to serve generated Swagger as a JSON endpoint
             app.UseSwagger(c => { c.RouteTemplate = "swagger/{documentName}/swagger.json"; });
 
@@ -178,5 +197,7 @@ namespace CodeLearn.Web.Host.Startup
                 }
             });
         }
+
+        
     }
 }
